@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace PatternsLab
@@ -7,114 +9,26 @@ namespace PatternsLab
     {
         public static void Main()
         {
-            Console.WriteLine("Choose your value: GPH - 1, General - 2");
-            int value = Convert.ToInt32(Console.ReadLine());
+            TarrificationFactory? tarrificationFactory;
+            List<Appartament> appartaments = new List<Appartament>();
 
-            if (value == 1)
+            appartaments.Add(new Appartament() { Electricity = 2000 });
+            appartaments.Add(new Appartament() { Electricity = 1500 });
+            appartaments.Add(new Appartament() { Electricity = 3000 });
+            appartaments.Add(new Appartament() { Electricity = 500 });
+            appartaments.Add(new Appartament() { Electricity = 250 });
+
+            for(int i = 0; i < appartaments.Count; i++)
             {
-                GPH gph;
-                double opv;
-                double osms;
+                if (appartaments[i].Electricity < 500) tarrificationFactory = new FirstTarrificationFactory();
+                else if (appartaments[i].Electricity < 1600) tarrificationFactory = new SecondTarifficationFactory();
+                else tarrificationFactory = new ThirdTarrificationFactory();
 
-                Console.WriteLine("Do you want to choose default settings? Write '1' if yes, else '0'");
-                int chooseValue = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Write your salary:");
-                int salary = Convert.ToInt32(Console.ReadLine());
-
-                if (chooseValue == 1) gph = new GPH(salary);
-                else
-                {
-                    Console.WriteLine("Write your OPV");
-                    opv = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your OSMS");
-                    osms = Convert.ToDouble(Console.ReadLine());
-                    gph = new GPH(salary: salary, opv: opv, osms: osms);
-                }
-
-                while (true)
-                {
-                    Console.WriteLine("Okay, we are have your config file. Let's check");
-                    using (StreamReader reader = new StreamReader(@"E:\Projects\config.json"))
-                    using (JsonReader jr = new JsonTextReader(reader))
-                    {
-                        string jsonValue = jr.ToString();
-                    }
-                    Console.WriteLine("Do you want to change taxes[1], or exit from programm[2]");
-                    int tmpVal = Convert.ToInt32(Console.ReadLine());
-
-                    if (tmpVal == 2) break;
-
-                    Console.WriteLine("Use new taxes and salary");
-                    Console.WriteLine("Write your salary:");
-                    salary = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Write your OPV");
-                    opv = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your OSMS");
-                    osms = Convert.ToDouble(Console.ReadLine());
-                    gph.SetNewTaxesForContract(salary: salary, opv: opv, osms: osms, vosms: 0, mrp: 0, IsGPH: true);
-                }
+                Console.WriteLine($"{i + 1} - appartment");
+                tarrificationFactory.SetTarrification();
+                Console.WriteLine(tarrificationFactory.GetPriceForElectricity(appartaments[i].Electricity));
             }
-            else if (value == 2)
-            {
-                General general;
-                double opv;
-                double vosms;
-                double osms;
-                double mrp;
 
-                Console.WriteLine("Do you want to choose default settings? Write '1' if yes, else '0'");
-                int chooseValue = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Write your salary:");
-                int salary = Convert.ToInt32(Console.ReadLine());
-
-                if (chooseValue == 1) general = new General(salary);
-                else
-                {
-                    Console.WriteLine("Write your OPV:");
-                    opv = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your VOSMS:");
-                    vosms = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your OSMS:");
-                    osms = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your MRP");
-                    mrp = Convert.ToDouble(Console.ReadLine());
-                    general = new General(salary: salary, opv: opv, vosms: vosms, osms: osms, mrp: mrp, IsGPH: false);
-
-                }
-
-                while (true)
-                {
-                    Console.WriteLine("Okay, we are have your config file. Let's check");
-                    using (StreamReader reader = new StreamReader(@"E:\Projects\config.json"))
-                    using (JsonReader jr = new JsonTextReader(reader))
-                    {
-                        string json = jr.ToString();
-                    }
-
-                    Console.WriteLine("Do you want to change taxes[1], or exit from programm[2]");
-                    int tmpVal = Convert.ToInt32(Console.ReadLine());
-
-                    if (tmpVal == 2) break;
-
-                    Console.WriteLine("Use new taxes and salary");
-                    Console.WriteLine("Write your salary:");
-                    salary = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Write your OPV");
-                    opv = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your VOSMS");
-                    vosms = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your OSMS");
-                    osms = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("Write your MRP");
-                    mrp = Convert.ToDouble(Console.ReadLine());
-                    general.SetNewTaxesForContract(salary: salary, opv: opv, vosms: vosms, osms: osms, mrp: mrp, IsGPH: false);
-
-                }
-            }
-            else
-            {
-                throw new Exception("We have a problem!");
-            }
         }
     }
 }
