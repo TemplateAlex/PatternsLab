@@ -9,6 +9,8 @@ namespace PatternsLab
     class Appartament
     {
         public double Electricity { get; set; }
+
+        public int TypeTarrification { get; set; }
     }
     interface ITarrification
     {
