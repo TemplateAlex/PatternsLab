@@ -43,39 +43,30 @@ namespace PatternsLab
 
     abstract class TarrificationFactory
     {
-        protected ITarrification? _tarrification;
-
-        public abstract void SetTarrification();
-
-        public double GetPriceForElectricity(double electricity)
-        {
-            if (_tarrification == null) throw new Exception("We have a problem!");
-
-            return _tarrification.CountPrice(electricity);
-        }
+        public abstract ITarrification SetTarrification();
     }
     
     class FirstTarrificationFactory: TarrificationFactory
     {
-        public override void SetTarrification()
+        public override ITarrification SetTarrification()
         {
-            _tarrification = new FirstTarrification();
+            return new FirstTarrification();
         }
     }
 
     class SecondTarifficationFactory: TarrificationFactory
     {
-        public override void SetTarrification()
+        public override ITarrification SetTarrification()
         {
-            _tarrification = new SecondTarrification();
+            return new SecondTarrification();
         }
     }
 
     class ThirdTarrificationFactory: TarrificationFactory
     {
-        public override void SetTarrification()
+        public override ITarrification SetTarrification()
         {
-            _tarrification = new ThirdTariffication();
+            return new ThirdTariffication();
         }
     }
 }

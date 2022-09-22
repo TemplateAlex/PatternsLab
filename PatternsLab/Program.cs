@@ -9,27 +9,69 @@ namespace PatternsLab
     {
         public static void Main()
         {
-            TarrificationFactory? tarrificationFactory;
-            List<Appartament> appartaments = new List<Appartament>();
+            List<IStudent> students = new List<IStudent>();
+            List<List<IMathStudent>> mathStudentsMatrix = new List<List<IMathStudent>>();
+            List<List<IComputerScienceStudent>> computerScienceMatrix = new List<List<IComputerScienceStudent>>();
+            PolytechFactory polytechFactory = new PolytechFactory();
+            KazNUFactory kazNUFactory = new KazNUFactory();
 
-            appartaments.Add(new Appartament() { Electricity = 2000, TypeTarrification = 1 });
-            appartaments.Add(new Appartament() { Electricity = 1500, TypeTarrification = 2 });
-            appartaments.Add(new Appartament() { Electricity = 3000, TypeTarrification = 3 });
-            appartaments.Add(new Appartament() { Electricity = 500, TypeTarrification = 2 });
-            appartaments.Add(new Appartament() { Electricity = 250, TypeTarrification = 1 });
+            students.Add(new Student() { Name = "Somebody", Surname = "Somebody", PreferencesUniversity = "polytech", PreferencesKafedra = "math" });
+            students.Add(new Student() { Name = "Klim", Surname = "Sanych", PreferencesUniversity = "kaznu", PreferencesKafedra = "math" });
+            students.Add(new Student() { Name = "Max", Surname = "Verstappen", PreferencesUniversity = "polytech", PreferencesKafedra = "cs" });
+            students.Add(new Student() { Name = "Nicholas", Surname = "Latifi", PreferencesUniversity = "polytech", PreferencesKafedra = "math" });
+            students.Add(new Student() { Name = "Carlos", Surname = "Sainz", PreferencesUniversity = "kaznu", PreferencesKafedra = "cs" });
 
-            for(int i = 0; i < appartaments.Count; i++)
+            List<IMathStudent> polytechMathStudents = new List<IMathStudent>();
+            List<IMathStudent> kaznuMathStudents = new List<IMathStudent>();
+            List<IComputerScienceStudent> polytechCSStudents = new List<IComputerScienceStudent>();
+            List<IComputerScienceStudent> kaznuCSStudents = new List<IComputerScienceStudent>(); 
+
+            for (int i = 0; i < students.Count; i++)
             {
-                if (appartaments[i].TypeTarrification == 1) tarrificationFactory = new FirstTarrificationFactory();
-                else if (appartaments[i].TypeTarrification == 2) tarrificationFactory = new SecondTarifficationFactory();
-                else if (appartaments[i].TypeTarrification == 3) tarrificationFactory = new ThirdTarrificationFactory();
-                else throw new Exception("We have a problem with tarrification");
-
-                Console.WriteLine($"{i + 1} - appartment");
-                tarrificationFactory.SetTarrification();
-                Console.WriteLine(tarrificationFactory.GetPriceForElectricity(appartaments[i].Electricity));
+                if (students[i].PreferencesKafedra == "math" && students[i].PreferencesUniversity == "polytech")
+                {
+                    polytechMathStudents.Add(polytechFactory.CreateMathStudent(students[i]));
+                }
+                else if (students[i].PreferencesKafedra == "math" && students[i].PreferencesUniversity == "kaznu")
+                {
+                    kaznuMathStudents.Add(kazNUFactory.CreateMathStudent(students[i]));
+                }
+                else if (students[i].PreferencesUniversity == "polytech")
+                {
+                    polytechCSStudents.Add(polytechFactory.CreateComputerScienceStudent(students[i]));
+                }
+                else
+                {
+                    kaznuCSStudents.Add(kazNUFactory.CreateComputerScienceStudent(students[i]));
+                }
             }
 
+            mathStudentsMatrix.Add(polytechMathStudents);
+            mathStudentsMatrix.Add(kaznuMathStudents);
+            computerScienceMatrix.Add(polytechCSStudents);
+            computerScienceMatrix.Add(kaznuCSStudents);
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (i == 0) Console.WriteLine("---Polytect Math Students---");
+                if (i == 1) Console.WriteLine("\n---KazNU Math Students---");
+
+                for (int j = 0; j < mathStudentsMatrix[i].Count; j++)
+                {
+                    mathStudentsMatrix[i][j].DoMathTask();
+                }
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (i == 0) Console.WriteLine("\n---Polytech Computer Science Students---");
+                if (i == 1) Console.WriteLine("\n---KazNU Computer Science Students---");
+
+                for (int j = 0; j < computerScienceMatrix[i].Count; j++)
+                {
+                    computerScienceMatrix[i][j].DoCSTask();
+                }
+            }
         }
     }
 }
