@@ -9,69 +9,31 @@ namespace PatternsLab
     {
         public static void Main()
         {
-            List<IStudent> students = new List<IStudent>();
-            List<List<IMathStudent>> mathStudentsMatrix = new List<List<IMathStudent>>();
-            List<List<IComputerScienceStudent>> computerScienceMatrix = new List<List<IComputerScienceStudent>>();
-            PolytechFactory polytechFactory = new PolytechFactory();
-            KazNUFactory kazNUFactory = new KazNUFactory();
+            //For Composite Pattern
 
-            students.Add(new Student() { Name = "Somebody", Surname = "Somebody", PreferencesUniversity = "polytech", PreferencesKafedra = "math" });
-            students.Add(new Student() { Name = "Klim", Surname = "Sanych", PreferencesUniversity = "kaznu", PreferencesKafedra = "math" });
-            students.Add(new Student() { Name = "Max", Surname = "Verstappen", PreferencesUniversity = "polytech", PreferencesKafedra = "cs" });
-            students.Add(new Student() { Name = "Nicholas", Surname = "Latifi", PreferencesUniversity = "polytech", PreferencesKafedra = "math" });
-            students.Add(new Student() { Name = "Carlos", Surname = "Sainz", PreferencesUniversity = "kaznu", PreferencesKafedra = "cs" });
+            Human firstEmp = new Employee("Alex", "Sanych");
+            Human secondEmp = new Employee();
+            Human thirdEmp = new Employee("Max", "Verstappen");
+            Human fourthEmp = new Employee("Charles", "Leclerc");
+            Human fLeafEmp = new JuniorEmployee("Nicholas", "Latifi");
+            Human sLeafEmp = new JuniorEmployee("Sebastian", "Vettel");
+            Human sThirdEmp = new JuniorEmployee("Baltteri", "Vottas");
 
-            List<IMathStudent> polytechMathStudents = new List<IMathStudent>();
-            List<IMathStudent> kaznuMathStudents = new List<IMathStudent>();
-            List<IComputerScienceStudent> polytechCSStudents = new List<IComputerScienceStudent>();
-            List<IComputerScienceStudent> kaznuCSStudents = new List<IComputerScienceStudent>(); 
+            fourthEmp.AddPartner(fLeafEmp);
+            thirdEmp.AddPartner(fourthEmp);
+            thirdEmp.AddPartner(sLeafEmp);
+            secondEmp.AddPartner(sThirdEmp);
+            firstEmp.AddPartner(thirdEmp);
+            firstEmp.AddPartner(secondEmp);
 
-            for (int i = 0; i < students.Count; i++)
-            {
-                if (students[i].PreferencesKafedra == "math" && students[i].PreferencesUniversity == "polytech")
-                {
-                    polytechMathStudents.Add(polytechFactory.CreateMathStudent(students[i]));
-                }
-                else if (students[i].PreferencesKafedra == "math" && students[i].PreferencesUniversity == "kaznu")
-                {
-                    kaznuMathStudents.Add(kazNUFactory.CreateMathStudent(students[i]));
-                }
-                else if (students[i].PreferencesUniversity == "polytech")
-                {
-                    polytechCSStudents.Add(polytechFactory.CreateComputerScienceStudent(students[i]));
-                }
-                else
-                {
-                    kaznuCSStudents.Add(kazNUFactory.CreateComputerScienceStudent(students[i]));
-                }
-            }
+            Console.WriteLine(firstEmp.ShowPartners());
 
-            mathStudentsMatrix.Add(polytechMathStudents);
-            mathStudentsMatrix.Add(kaznuMathStudents);
-            computerScienceMatrix.Add(polytechCSStudents);
-            computerScienceMatrix.Add(kaznuCSStudents);
+            //For Adapter Pattern
 
-            for (int i = 0; i < 2; i++)
-            {
-                if (i == 0) Console.WriteLine("---Polytect Math Students---");
-                if (i == 1) Console.WriteLine("\n---KazNU Math Students---");
-
-                for (int j = 0; j < mathStudentsMatrix[i].Count; j++)
-                {
-                    mathStudentsMatrix[i][j].DoMathTask();
-                }
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                if (i == 0) Console.WriteLine("\n---Polytech Computer Science Students---");
-                if (i == 1) Console.WriteLine("\n---KazNU Computer Science Students---");
-
-                for (int j = 0; j < computerScienceMatrix[i].Count; j++)
-                {
-                    computerScienceMatrix[i][j].DoCSTask();
-                }
-            }
+            ForSerialize tmp = new ForSerialize();
+            SeriazlizationJsonAdapter seriazlizationJsonAdapter = new SeriazlizationJsonAdapter();
+            seriazlizationJsonAdapter.DoXMLSerialization(tmp);
+            seriazlizationJsonAdapter.DoJsonSerialization(tmp);
         }
     }
 }
